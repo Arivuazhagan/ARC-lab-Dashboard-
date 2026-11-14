@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--line:#e3e8f0;--tx:#1b2333;--mut:#6b7689;--green:#16a34a;--blue:#2563eb;--orange:#f59e0b;--red:#dc2626;--acc:#1e3a8a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--tx)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 28px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{display:flex;gap:14px;align-items:center}
+.logo{width:46px;height:46px;border-radius:12px;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800}
+.brand h1{font-size:19px}.brand p{font-size:13px;color:var(--mut)}
+.meta{text-align:right;font-size:12px;color:var(--mut)}.meta b{color:var(--green)}
+.meta button{margin-top:4px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--blue);cursor:pointer}
+.wrap{padding:22px 28px 36px;max-width:1500px;margin:0 auto}
+h2{font-size:17px;margin:22px 0 12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.kpi span{font-size:12px;color:var(--mut)}.kpi div{font-size:26px;font-weight:700;margin-top:6px}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--mut);flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.mc{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,40,.04);cursor:pointer;transition:transform .1s,box-shadow .1s}
+.mc:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(16,24,40,.08)}
+.mc .t{height:6px}.mc .in{padding:12px 14px}
+.mc h4{font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.pill{padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap}
+.mc .s{font-size:12px;color:var(--mut);margin-top:8px;line-height:1.7}.mc .s b{color:var(--tx)}
+.mc .lnk{font-size:12px;color:var(--blue);margin-top:6px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.two{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+.box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 1px 2px rgba(16,24,40,.04);overflow:auto}
+.box h3{font-size:15px;margin-bottom:12px}
+.vb{display:flex;align-items:flex-end;gap:8px;height:190px;border-bottom:1px solid var(--line);padding:0 2px}
+.vb div{flex:1;text-align:center;font-size:10px;color:var(--mut);display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.vb i{display:block;border-radius:5px 5px 0 0;margin-top:3px}
+.vl{display:flex;gap:8px;padding:6px 2px 0;font-size:10.5px;color:var(--mut)}.vl span{flex:1;text-align:center;min-width:0;overflow-wrap:anywhere}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:9px 10px;border-bottom:1px solid var(--line);background:#f8fafc}
+td{padding:9px 10px;border-bottom:1px solid #eef1f6;vertical-align:top}td.n{text-align:right}
+.dl{display:grid;grid-template-columns:150px 1fr;gap:9px 10px;font-size:14px}.dl span{color:var(--mut)}
+.big{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.crumb{font-size:13px;color:var(--mut);margin-bottom:14px}.crumb a{color:var(--blue);cursor:pointer}
+.btn{display:inline-block;padding:7px 12px;border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--blue);background:#fff;text-decoration:none}
+.load{padding:60px;text-align:center;color:var(--mut)}
+.err{padding:16px;background:#fef2f2;color:var(--red);border:1px solid #fecaca;border-radius:10px;margin:20px 0}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.three,.two,.hero,.big{grid-template-columns:1fr}.big{grid-template-columns:repeat(2,1fr)}.dl{grid-template-columns:120px 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">ARC</div><div><h1>Aviation and Robotics Club (ARC) – Lab Dashboard</h1><p>Dr. S. Arivazhagan · 96293 96144 · KPRIET</p></div></div>
+  <div class="meta">Live from ARC-LAB Google Sheet<br><b>●</b> Updated <span id="upd">…</span> · auto-refresh 5 min<br><button onclick="refresh()">↻ Refresh</button></div>
+</header>
+<div class="wrap" id="app"><div class="load">Loading dashboard…</div></div>
+
+<script>
+const C = {green:'var(--green)', blue:'var(--blue)', orange:'var(--orange)', red:'var(--red)'};
+const L = {green:'Working', blue:'Not utilized', orange:'Check status', red:'Not working'};
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const inr = n => '₹' + Number(n || 0).toLocaleString('en-IN');
+const short = t => t.replace(/ 3d printer/i, '').replace(/ printer/i, '').trim();
+let D = null, cur = null;
+const app = document.getElementById('app');
+
+function api(fn, arg) {
+  return new Promise((ok, no) => {
+    const r = google.script.run.withSuccessHandler(ok).withFailureHandler(no);
+    arg === undefined ? r[fn]() : r[fn](arg);
+  });
+}
+function fail(e) { app.innerHTML = `<div class="err">Could not load data: ${esc(e && e.message || e)}</div>`; }
+
+function chart(title, list, val, color, fmtv) {
+  const mx = Math.max(1, ...list.map(val));
+  return `<div class="box"><h3>${title}</h3><div class="vb">${list.map(m => `<div>${fmtv(val(m))}<i style="height:${Math.max(2, val(m) / mx * 160)}px;background:${color}"></i></div>`).join('')}</div>
+  <div class="vl">${list.map(m => `<span>${esc(short(m.title))}</span>`).join('')}</div></div>`;
+}
+
+function renderDash() {
+  cur = null;
+  const ms = D.machines, n = s => ms.filter(m => m.status === s).length;
+  const used = ms.filter(m => m.minutes > 0 || m.students > 0);
+  app.innerHTML = `
+  <div class="kpis">
+    <div class="kpi"><span>Total machines</span><div>${ms.length}</div></div>
+    <div class="kpi"><span>Working</span><div style="color:var(--green)">${n('green')}</div></div>
+    <div class="kpi"><span>Idle 7–13 days</span><div style="color:var(--blue)">${n('blue')}</div></div>
+    <div class="kpi"><span>Check status (14+ days)</span><div style="color:var(--orange)">${n('orange')}</div></div>
+    <div class="kpi"><span>Not working</span><div style="color:var(--red)">${n('red')}</div></div>
+  </div>
+  <div class="row"><h2>Machine status</h2><div class="legend">
+    <span><i style="background:var(--green)"></i>Working</span><span><i style="background:var(--blue)"></i>Idle 7–13 days</span>
+    <span><i style="background:var(--orange)"></i>Check status</span><span><i style="background:var(--red)"></i>Not working</span></div></div>
+  <div class="grid">${ms.map(m => `
+    <div class="mc" onclick="openMachine('${m.id}')"><div class="t" style="background:${C[m.status]}"></div><div class="in">
+      <h4>${esc(m.title)}<span class="pill" style="background:${C[m.status]}">${L[m.status]}</span></h4>
+      <div class="s">Last used <b>${esc(m.lastUsed || '—')}</b> · Idle <b>${m.idle ?? '—'} d</b><br>${Math.round(m.minutes / 60)} h · ${m.students} students</div>
+      <div class="lnk">View details →</div></div></div>`).join('')}</div>
+  <h2>Utilization</h2>
+  <div class="three">
+    ${chart('Hours used', used, m => m.minutes, '#c026d3', v => Math.round(v / 60))}
+    ${chart('Revenue (₹)', used, m => m.revenue, '#eab308', v => v ? Number(v).toLocaleString('en-IN') : '0')}
+    ${chart('Students benefited', used, m => m.students, '#0891b2', v => v)}
+  </div>`;
+  window.scrollTo(0, 0);
+}
+
+function openMachine(id) {
+  cur = id;
+  const m = D.machines.find(x => x.id === id);
+  app.innerHTML = `<div class="crumb"><a onclick="renderDash()">← Dashboard</a> / ${esc(m.title)}</div><div class="load">Loading ${esc(m.title)}…</div>`;
+  window.scrollTo(0, 0);
+  api('getMachine', id).then(renderMachine).catch(fail);
+}
+
+function renderMachine(x) {
+  if (cur !== x.machine.id) return;
+  const m = x.machine, c = x.card || {}, d = x.details || {};
+  const mx = Math.max(1, ...x.monthly.map(b => b.hours));
+  const stCol = s => /resolv|done|complet/i.test(s) ? 'var(--green)' : (s ? 'var(--orange)' : '#94a3b8');
+  app.innerHTML = `
+  <div class="crumb"><a onclick="renderDash()">← Dashboard</a> / ${esc(m.title)}</div>
+  <div class="hero">
+    <div class="box"><div class="row"><h3 style="font-size:20px;margin:0">${esc(m.title)}</h3><span class="pill" style="background:${C[m.status]};font-size:13px;padding:4px 12px">${L[m.status]}</span></div>
+      <p style="color:var(--mut);font-size:13px;margin:6px 0 16px;white-space:pre-line">${esc(d.spec || '')}</p>
+      <div class="dl">
+        <span>Purchase date</span><b>${esc(c.purchase || d.purchase || '—')}</b>
+        <span>Cost</span><b>${esc(c.cost || '—')}</b>
+        <span>Vendor</span><b>${esc([c.vendor || d.company, c.vendorNo].filter(Boolean).join(' · ') || '—')}</b>
+        <span>Service no.</span><b>${esc(c.service || '—')}</b>
+        <span>Student in charge</span><b>${esc([c.student, c.phone].filter(Boolean).join(' · ') || '—')}</b>
+        <span>Status note</span><b>${esc(c.statusText || '—')}</b>
+        <span>Location</span><b>${esc(x.location || '—')}</b>
+      </div></div>
+    <div class="box"><h3>Utilization</h3><div class="big">
+      <div class="kpi"><span>Hours used</span><div>${Math.round(m.minutes / 60)} h</div></div>
+      <div class="kpi"><span>Students</span><div>${m.students}</div></div>
+      <div class="kpi"><span>Revenue</span><div>${inr(m.revenue)}</div></div>
+      <div class="kpi"><span>Idle days</span><div style="color:${C[m.status]}">${m.idle ?? '—'}</div></div></div>
+      <p style="font-size:13px;color:var(--mut);margin-top:14px">${m.lastUsed ? `Last used ${esc(m.lastUsed)}${x.lastBy ? ' by ' + esc(x.lastBy) : ''}` : 'No usage logged yet'}</p></div>
+  </div>
+  <div class="two" style="margin-top:16px">
+    <div class="box"><h3>Monthly usage (hours, last 12 months)</h3>
+      <div class="vb">${x.monthly.map(b => `<div>${b.hours || ''}<i style="height:${Math.max(2, b.hours / mx * 160)}px;background:var(--acc)"></i></div>`).join('')}</div>
+      <div class="vl">${x.monthly.map(b => `<span>${b.label}</span>`).join('')}</div></div>
+    <div class="box"><div class="row"><h3>Maintenance history</h3>${c.link ? `<a class="btn" href="${esc(c.link)}" target="_blank">Open machine sheet ↗</a>` : ''}</div>
+      ${x.sheetErr ? `<p style="color:var(--red);font-size:13px">${esc(x.sheetErr)}</p>` : ''}
+      ${x.maint.length ? `<table><tr><th>Date</th><th>Problem</th><th>Action</th><th>Status</th></tr>${x.maint.map(r => `<tr><td>${esc(r.date)}</td><td>${esc(r.problem)}</td><td>${esc(r.action)}</td><td><span class="pill" style="background:${stCol(r.status)}">${esc(r.status || '—')}</span></td></tr>`).join('')}</table>`
+        : '<p style="color:var(--mut);font-size:13px">No problems recorded.</p>'}</div>
+  </div>
+  <div class="box" style="margin-top:16px"><h3>Recent usage</h3>
+    ${x.recent.length ? `<table><tr><th>Date</th><th>Name</th><th>Purpose</th><th>Minutes</th><th>Technician</th><th>Students</th></tr>${x.recent.map(r => `<tr><td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.purpose)}</td><td class="n">${r.min}</td><td>${esc(r.tech)}</td><td class="n">${r.stu}</td></tr>`).join('')}</table>`
+      : '<p style="color:var(--mut);font-size:13px">No usage logged yet.</p>'}</div>`;
+}
+
+const AUTO_MIN = 5;   // auto-refresh interval (minutes)
+
+function refresh(silent) {
+  if (!silent) app.innerHTML = '<div class="load">Loading dashboard…</div>';
+  api('getDashboard').then(r => {
+    D = r; document.getElementById('upd').textContent = r.updated;
+    if (!cur) { const y = window.scrollY; renderDash(); if (silent) window.scrollTo(0, y); }
+    else if (silent) { const id = cur, y = window.scrollY; api('getMachine', id).then(x => { renderMachine(x); window.scrollTo(0, y); }).catch(() => {}); }
+    else openMachine(cur);
+  }).catch(e => { if (!silent) fail(e); });
+}
+refresh();
+setInterval(() => { if (!document.hidden) refresh(true); }, AUTO_MIN * 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(true); });
+</script>
+</body>
+</html>
