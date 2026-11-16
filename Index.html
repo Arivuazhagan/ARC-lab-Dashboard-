@@ -74,6 +74,7 @@ function api(fn, arg) {
 }
 function fail(e) { app.innerHTML = `<div class="err">Could not load data: ${esc(e && e.message || e)}</div>`; }
 
+const tot = (l, k) => l.reduce((s, m) => s + (Number(m[k]) || 0), 0);
 function chart(title, list, val, color, fmtv) {
   const mx = Math.max(1, ...list.map(val));
   return `<div class="box"><h3>${title}</h3><div class="vb">${list.map(m => `<div>${fmtv(val(m))}<i style="height:${Math.max(2, val(m) / mx * 160)}px;background:${color}"></i></div>`).join('')}</div>
@@ -102,9 +103,9 @@ function renderDash() {
       <div class="lnk">View details →</div></div></div>`).join('')}</div>
   <h2>Utilization</h2>
   <div class="three">
-    ${chart('Hours used', used, m => m.minutes, '#c026d3', v => Math.round(v / 60))}
-    ${chart('Revenue (₹)', used, m => m.revenue, '#eab308', v => v ? Number(v).toLocaleString('en-IN') : '0')}
-    ${chart('Students benefited', used, m => m.students, '#0891b2', v => v)}
+    ${chart(`Hours used (Total: ${Math.round(tot(used, 'minutes') / 60).toLocaleString('en-IN')} h)`, used, m => m.minutes, '#c026d3', v => Math.round(v / 60))}
+    ${chart(`Revenue (Total: ₹${tot(used, 'revenue').toLocaleString('en-IN')})`, used, m => m.revenue, '#eab308', v => v ? Number(v).toLocaleString('en-IN') : '0')}
+    ${chart(`Students benefited (Total: ${tot(used, 'students').toLocaleString('en-IN')})`, used, m => m.students, '#0891b2', v => v)}
   </div>`;
   window.scrollTo(0, 0);
 }
